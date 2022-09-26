@@ -28,6 +28,9 @@ public class MaterialCharacteristics {
     private Material material;
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Results> results;
+    @ManyToOne
+    @JoinColumn(name = "unit_id")
+    private Unit unit;
 
     @Override
     public boolean equals(Object o) {

@@ -3,11 +3,9 @@ package com.study.ConstructionCalculatorWeb.entity;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,6 +17,8 @@ public class Unit {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String name;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<MaterialCharacteristics> materialCharacteristics;
 
     @Override
     public boolean equals(Object o) {

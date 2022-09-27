@@ -5,20 +5,17 @@ default:
 
 
 stages:
-- pre_install
-- build_jar
+  - build_jar
 
-install:
-  stage: pre_install
-  script:
+.install_maven:
+  before_script:
     - apt update -y
     - apt install maven -y
 
 build:
+  extends: .install_maven
   stage: build_jar
   script:
   - ls -la
   - mvn clean package
   when: always
-  needs: 
-    - install

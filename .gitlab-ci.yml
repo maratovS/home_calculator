@@ -2,8 +2,6 @@ image: ubuntu:latest
 default: 
   tags: [worker01]
 
-
-
 stages:
   - build_jar
 
@@ -16,6 +14,5 @@ build:
   extends: .install_maven
   stage: build_jar
   script:
-  - ls -la
   - mvn clean package
-  when: always
+  when: manual

@@ -8,3 +8,6 @@ build:
   script:
   - echo 'hello world'
   when: manual
+
+tags:
+  - worker01

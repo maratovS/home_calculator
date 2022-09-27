@@ -15,4 +15,4 @@ build:
   stage: build_jar
   script:
   - mvn clean package
-  when: manual
+  when: always

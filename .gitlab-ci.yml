@@ -1,0 +1,10 @@
+image: ubuntu:latest
+
+stages:
+- build_jar
+
+build:
+  stage: build_jar
+  script:
+  - echo 'hello world'
+  when: manual

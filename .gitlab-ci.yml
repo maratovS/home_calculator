@@ -1,4 +1,8 @@
 image: ubuntu:latest
+default: 
+  tags: [worker01]
+
+
 
 stages:
 - pre_install
@@ -9,10 +13,10 @@ install:
   script:
     - apt update
     - apt install maven
+
 build:
   stage: build_jar
   script:
   - ls -la
   - mvn clean package
   when: always
-  tags: [worker01]

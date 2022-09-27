@@ -5,13 +5,14 @@ default:
 stages:
   - build_jar
 
-# .install_maven:
-#   before_script:
-#     - apt update -y
-#     - apt install maven -y
+.install_prereq:
+  before_script:
+    - apt update -y
+    - apt install maven -y
+    - apt install openjdk-17-jre-headless -y
 
 build:
-  # extends: .install_maven
+  extends: .install_prereq
   stage: build_jar
   script:
   - mvn clean package

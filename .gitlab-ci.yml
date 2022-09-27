@@ -9,5 +9,4 @@ build:
   - echo 'hello world'
   when: manual
 
-tags:
-  - worker01
+tags: [worker01]

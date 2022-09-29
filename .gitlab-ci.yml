@@ -1,0 +1,19 @@
+image: ubuntu:latest
+default: 
+  tags: [worker01]
+
+stages:
+  - build_jar
+
+.install_prereq:
+  before_script:
+    - apt update -y
+    - apt install maven -y
+    - apt install openjdk-17-jre-headless -y
+
+build:
+  extends: .install_prereq
+  stage: build_jar
+  script:
+  - mvn clean package
+  when: always

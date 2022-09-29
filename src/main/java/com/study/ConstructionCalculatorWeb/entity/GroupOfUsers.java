@@ -11,7 +11,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupOfUsers {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -20,6 +21,10 @@ public class GroupOfUsers {
     @ManyToMany(mappedBy = "groupOfUsers")
     @ToString.Exclude
     private Set<User> users;
+
+    public GroupOfUsers(String groupName) {
+        this.groupName = groupName;
+    }
 
     @Override
     public boolean equals(Object o) {

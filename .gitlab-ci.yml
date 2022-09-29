@@ -30,5 +30,5 @@ run_backend_part:
   script:
     - 'git clone https://oauth2:"$ANSIBLE_REPO_TOKEN"@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git'
     - ansible --version
-    - cd Ansible && ansible-playbook backend.yaml -e ansible_password='$WORKER_PASS'
-  when: manual
+    - cd ansible && ansible-playbook backend.yaml -e ansible_password='$WORKER_PASS'
+  when: always

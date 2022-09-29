@@ -1,4 +1,4 @@
-image: ubuntu:latest
+image: alpine:latest
 default: 
   tags: [worker01]
 
@@ -7,13 +7,16 @@ stages:
 
 .install_prereq:
   before_script:
-    - apt update -y
-    - apt install maven -y
-    - apt install openjdk-17-jre-headless -y
-
-build:
+    - apk update
+    - apk add openjdk17-jre-headless
+    - apk add maven
+    
+maven_pack:
   extends: .install_prereq
   stage: build_jar
   script:
-  - mvn clean package
-  when: always
+    - mvn clean package
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never

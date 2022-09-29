@@ -12,6 +12,7 @@ stages:
     - apk add openjdk17-jre-headless
     - apk add maven
     - apk add ansible
+    - apk add git
     
 maven_pack:
   extends: .install_prereq

@@ -4,12 +4,14 @@ default:
 
 stages:
   - build_jar
+  - backend_run
 
 .install_prereq:
   before_script:
     - apk update
     - apk add openjdk17-jre-headless
     - apk add maven
+    - apk add ansible
     
 maven_pack:
   extends: .install_prereq
@@ -20,3 +22,12 @@ maven_pack:
     - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
       when: always
     - when: never
+
+run_backend_part:
+  extends: .install_prereq
+  stage: backend_run
+  script:
+    - git clone https://oauth2:$ansible_repo_token@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git
+    - ansible --version
+    - cd Ansible && ansible-playbook backend.yaml -e ansible_password='$worker_pass'
+  when: manual

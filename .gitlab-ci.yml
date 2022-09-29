@@ -28,7 +28,8 @@ run_backend_part:
   extends: .install_prereq
   stage: backend_run
   script:
-    - git clone https://oauth2:$ansible_repo_token@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git
+    - $ANSIBLE_REPO_TOKEN
+    - git clone https://oauth2:$ANSIBLE_REPO_TOKEN@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git
     - ansible --version
-    - cd Ansible && ansible-playbook backend.yaml -e ansible_password='$worker_pass'
+    - cd Ansible && ansible-playbook backend.yaml -e ansible_password='$WORKER_PASS'
   when: manual

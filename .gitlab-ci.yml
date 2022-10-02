@@ -30,6 +30,6 @@ run_backend_part:
   script:
     - 'git clone https://oauth2:"$ANSIBLE_REPO_TOKEN"@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git'
     - ansible --version
-    - cat "$VM_KEY" > "id_rsa" 
+    - cat "$VM_KEY" >> ./ansible/id_rsa
     - cd ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=$VM_USER'
   when: always

@@ -14,6 +14,7 @@ stages:
     - apk add maven
     - apk add ansible
     - apk add git
+    - apk add python3
     
 maven_pack:
   extends: .install_prereq

@@ -30,5 +30,7 @@ run_backend_part:
   script:
     - 'git clone https://oauth2:"$ANSIBLE_REPO_TOKEN"@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git'
     - echo $VM_KEY > pass && export ANSIBLE_VAULT_PASSWORD_FILE=pass
+    - echo $ANSIBLE_VAULT_PASSWORD_FILE
+    - ls
     - cd ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=$VM_USER'
   when: always

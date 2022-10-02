@@ -9,6 +9,7 @@ stages:
 .install_prereq:
   before_script:
     - apk update
+    - apk add openssh
     - apk add openjdk17-jre-headless
     - apk add maven
     - apk add ansible

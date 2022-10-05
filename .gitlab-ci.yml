@@ -40,7 +40,7 @@ run_backend_part:
     - cat $PRIVATE_KEY > /builds/mygroup/backend/ansible/id_rsa
     - chmod 600 /builds/mygroup/backend/ansible/id_rsa
     - cd /builds/mygroup/backend/target && ls -la
-    - cd /builds/mygroup/backend/ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser' -e 'ansible_sudo_pass=$WORKER_PASS'
+    - cd /builds/mygroup/backend/ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser' -e 'ansible_become_pass=$WORKER_PASS'
   dependencies:
     - maven_pack
   when: always

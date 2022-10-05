@@ -39,8 +39,8 @@ run_backend_part:
     - 'git clone https://oauth2:"$ANSIBLE_REPO_TOKEN"@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git'
     - cat $PRIVATE_KEY > /builds/mygroup/backend/ansible/id_rsa
     - chmod 600 /builds/mygroup/backend/ansible/id_rsa
-    - cd ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser' -vvv
-    - cd /builds/mygroup/backend && ls -la
+    - cd /builds/mygroup/backend/target && ls -la
+    - cd ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser'
   dependencies:
     - maven_pack
   when: always

@@ -27,10 +27,9 @@ maven_pack:
     paths:
       - /builds/mygroup/backend/target/*.jar
   rules:
-    # - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
-    #   when: always
-    # - when: never
-    - when: always
+    - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never
 
 run_backend_part:
   extends: .install_prereq
@@ -43,4 +42,7 @@ run_backend_part:
     - cd /builds/mygroup/backend/ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser'
   dependencies:
     - maven_pack
-  when: always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never

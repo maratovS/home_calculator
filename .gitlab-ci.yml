@@ -23,7 +23,7 @@ maven_pack:
   script:
     - mvn clean package
   artifacts:
-    expire_in: 1 day
+    expire_in: 1 week
     paths:
       - /builds/mygroup/backend/target/*.jar
   rules:

@@ -1,0 +1,22 @@
+image: alpine:latest
+default: 
+  tags: [worker01]
+
+stages:
+  - build_jar
+
+.install_prereq:
+  before_script:
+    - apk update
+    - apk add openjdk17-jre-headless
+    - apk add maven
+    
+maven_pack:
+  extends: .install_prereq
+  stage: build_jar
+  script:
+    - mvn clean package
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never

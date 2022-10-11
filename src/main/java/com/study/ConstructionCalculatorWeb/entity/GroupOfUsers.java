@@ -1,5 +1,6 @@
 package com.study.ConstructionCalculatorWeb.entity;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -18,13 +19,6 @@ public class GroupOfUsers {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String groupName;
-    @ManyToMany(mappedBy = "groupOfUsers")
-    @ToString.Exclude
-    private Set<User> users;
-
-    public GroupOfUsers(String groupName) {
-        this.groupName = groupName;
-    }
 
     @Override
     public boolean equals(Object o) {

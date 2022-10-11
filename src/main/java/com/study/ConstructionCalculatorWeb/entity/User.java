@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,7 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "usr")
 public class User {
     @Id
@@ -23,14 +26,14 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_groupOfUsers",
             joinColumns = { @JoinColumn(name = "usr_id") },
             inverseJoinColumns = { @JoinColumn(name = "groupOfUsers_id") }
     )
     @ToString.Exclude
-    private Set<GroupOfUsers> groupOfUsers;
+    private Collection<GroupOfUsers> groupOfUsers = new ArrayList<>();
     private String surname;
     private String name;
     private String patronymic;

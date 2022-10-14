@@ -30,10 +30,13 @@ run_backend_part:
   stage: backend_run
   script:
     - 'git clone https://oauth2:"$ANSIBLE_REPO_TOKEN"@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git'
-    - chmod 600 /builds/mygroup/backend/ansible/id_rsa && echo $VM_KEY > /builds/mygroup/backend/pass && export ANSIBLE_VAULT_PASSWORD_FILE=/builds/mygroup/backend/pass
-    - python3 --version
-    # - cd ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser' -vvv
-    - cd ansible && ansible-playbook backend.yaml -e 'ansible_password=$WORKER_PASS' -e 'ansible_user=devuser' -vvv
+    - cat $PRIVATE_KEY > /builds/mygroup/backend/ansible/id_rsa
+    - chmod 600 /builds/mygroup/backend/ansible/id_rsa
+    - cd /builds/mygroup/backend/ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser'
+
+    # - chmod 600 /builds/mygroup/backend/ansible/id_rsa && echo $VM_KEY > /builds/mygroup/backend/pass && export ANSIBLE_VAULT_PASSWORD_FILE=/builds/mygroup/backend/pass
+    # # - cd ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser' -vvv
+    # - cd ansible && ansible-playbook backend.yaml -e 'ansible_password=$WORKER_PASS' -e 'ansible_user=devuser' -vvv
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
       when: always

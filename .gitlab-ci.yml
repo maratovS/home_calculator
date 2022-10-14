@@ -4,19 +4,45 @@ default:
 
 stages:
   - build_jar
+  - backend_run
 
 .install_prereq:
   before_script:
     - apk update
+    - apk add openssh
     - apk add openjdk17-jre-headless
     - apk add maven
+    - apk add ansible
+    - apk add git
+    - apk add python3
+    - apk add sshpass
     
 maven_pack:
   extends: .install_prereq
   stage: build_jar
   script:
     - mvn clean package
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - /builds/mygroup/backend/target/*.jar
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never
+
+run_backend_part:
+  extends: .install_prereq
+  stage: backend_run
+  script:
+    - 'git clone https://oauth2:"$ANSIBLE_REPO_TOKEN"@mugiwara.gitlab.yandexcloud.net/mygroup/ansible.git'
+    - cat $PRIVATE_KEY > /builds/mygroup/backend/ansible/id_rsa
+    - chmod 600 /builds/mygroup/backend/ansible/id_rsa
+    - cd /builds/mygroup/backend/target && ls -la
+    - cd /builds/mygroup/backend/ansible && ansible-playbook backend.yaml -e 'ansible_ssh_private_key_file=id_rsa' -e 'ansible_user=devuser'
+  dependencies:
+    - maven_pack
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
       when: always
     - when: never

@@ -1,6 +1,6 @@
 package com.study.ConstructionCalculatorWeb;
 
-import com.study.ConstructionCalculatorWeb.Service.UserService;
+import com.study.ConstructionCalculatorWeb.service.UserService;
 import com.study.ConstructionCalculatorWeb.entity.GroupOfUsers;
 import com.study.ConstructionCalculatorWeb.entity.User;
 import com.study.ConstructionCalculatorWeb.repo.GroupOfUsersRepository;

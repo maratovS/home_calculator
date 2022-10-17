@@ -1,4 +1,4 @@
-package com.study.ConstructionCalculatorWeb.Service;
+package com.study.ConstructionCalculatorWeb.service;
 
 import com.study.ConstructionCalculatorWeb.entity.GroupOfUsers;
 import com.study.ConstructionCalculatorWeb.entity.User;

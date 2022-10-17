@@ -28,7 +28,7 @@ public class ConstructionCalculatorWebApplication {
 	}
 
 	@Bean
-	public CommandLineRunner run(GroupOfUsersRepository repo, UserRepository userRepository, UserService userService) throws Exception{
+	public CommandLineRunner run(GroupOfUsersRepository repo, UserRepository userRepository, UserService userService){
 		return (String[] args) -> {
 			if (repo.findAll().isEmpty()) {
 				repo.save(new GroupOfUsers(null, "ROLE_USER"));

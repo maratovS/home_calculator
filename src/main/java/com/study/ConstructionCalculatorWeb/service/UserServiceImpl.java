@@ -55,9 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException("User not found in database!");
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getGroupOfUsers().forEach(group -> {
-            authorities.add(new SimpleGrantedAuthority(group.getGroupName()));
-        });
+        user.getGroupOfUsers().forEach(group -> authorities.add(new SimpleGrantedAuthority(group.getGroupName())));
         return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), authorities);
     }
 }

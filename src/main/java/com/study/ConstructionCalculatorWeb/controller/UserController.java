@@ -25,6 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired

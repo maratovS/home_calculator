@@ -22,10 +22,6 @@ public class Customer {
     private int telephoneNumber;
     private String email;
     private String address;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<User> users;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Calculation> calculations;
 
     @Override
     public boolean equals(Object o) {

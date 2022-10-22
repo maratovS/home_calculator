@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -42,9 +42,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addRoleToUser(User user, GroupOfUsers group) {
-        if (groupOfUsersRepository.existsById(group.getId())){
-            user.getGroupOfUsers().add(group);
+    public void addRoleToUser(User user, String group) {
+        GroupOfUsers groupOfUsers = groupOfUsersRepository.findByGroupName(group);
+        if (groupOfUsers == null) {
+            user.getGroupOfUsers().add(groupOfUsers);
             userRepository.save(user);
         }
     }

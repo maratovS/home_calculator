@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface GroupOfUsersRepository extends JpaRepository<GroupOfUsers, Long> {
-    GroupOfUsers findBygroupName(String s);
+    GroupOfUsers findByGroupName(String s);
 }

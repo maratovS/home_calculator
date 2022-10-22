@@ -33,8 +33,14 @@ public class UserController {
     private GroupOfUsersRepository groupOfUsersRepository;
 
     @GetMapping("/users")
-    List<User> users(){
+    public List<User> users(){
         return userService.getUsers();
+    }
+
+    @PostMapping("/addUser")
+    public void addUser(@RequestBody User user){
+        userService.addUser(user);
+        userService.addRoleToUser(user, "ROLE_USER");
     }
 
     @GetMapping("/token/refresh")

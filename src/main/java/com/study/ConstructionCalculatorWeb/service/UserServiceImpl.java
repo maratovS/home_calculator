@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,10 +42,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addRoleToUser(User user, String group) {
         GroupOfUsers groupOfUsers = groupOfUsersRepository.findByGroupName(group);
-        if (groupOfUsers != null) {
-            user.getGroupOfUsers().add(groupOfUsers);
-            userRepository.save(user);
+        if (groupOfUsers == null) {
+            return;
         }
+        Set<GroupOfUsers> groups = user.getGroupOfUsers();
+        if (groups.isEmpty())
+        {
+            groups = new HashSet<>();
+            groups.add(groupOfUsers);
+            user.setGroupOfUsers(groups);
+        } else {
+          user.getGroupOfUsers().add(groupOfUsers);
+        }
+        userRepository.save(user);
     }
 
     @Override

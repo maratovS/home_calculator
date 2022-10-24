@@ -33,7 +33,7 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "groupOfUsers_id") }
     )
     @ToString.Exclude
-    private Collection<GroupOfUsers> groupOfUsers = new ArrayList<>();
+    private Set<GroupOfUsers> groupOfUsers;
     private String surname;
     private String name;
     private String patronymic;

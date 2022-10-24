@@ -23,9 +23,9 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "status_id")
     private UserStatus status;
-    @ManyToOne
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private Set<Customer> customer;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_groupOfUsers",
@@ -37,7 +37,7 @@ public class User {
     private String surname;
     private String name;
     private String patronymic;
-    private int telephoneNumber;
+    private long telephoneNumber;
     private String email;
     private String login;
     private String password;

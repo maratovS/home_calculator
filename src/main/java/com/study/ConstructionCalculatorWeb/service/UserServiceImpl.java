@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addRoleToUser(User user, String group) {
         GroupOfUsers groupOfUsers = groupOfUsersRepository.findByGroupName(group);
-        if (groupOfUsers == null) {
+        if (groupOfUsers != null) {
             user.getGroupOfUsers().add(groupOfUsers);
             userRepository.save(user);
         }

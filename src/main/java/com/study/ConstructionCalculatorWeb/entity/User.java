@@ -2,10 +2,10 @@ package com.study.ConstructionCalculatorWeb.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,9 +23,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "status_id")
     private UserStatus status;
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
-    private Set<Customer> customer;
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_groupOfUsers",
@@ -39,6 +37,7 @@ public class User {
     private String patronymic;
     private long telephoneNumber;
     private String email;
+    @Column(unique = true)
     private String login;
     private String password;
 

@@ -37,9 +37,9 @@ public class ConstructionCalculatorWebApplication {
 			}
 			if (userRepository.findAll().isEmpty()) {
 				Set<GroupOfUsers> groups = new HashSet<>(repo.findAll());
-				userService.addUser(new User(null, null, null, groups, "Overlordov", "Overlord", "Overlordovich", 93717141, "ololo@gmail.com", "overlord", "123456"));
-				userService.addUser(new User(null, null, null, groups, "Толч", "Алексей", "Overlordovich", 93987654, "ololo@gmail.com", "alexey99", "123456"));
-				userService.addUser(new User(null, null, null, groups, "Малинин", "Игорь", "Игоревич", 93745678, "ololo@gmail.com", "barbie9925", "123456"));
+				userService.addUser(new User(null, null, groups, "Overlordov", "Overlord", "Overlordovich", 9093717141L, "ololo@gmail.com", "overlord", "123456"));
+				userService.addUser(new User(null, null, groups, "Толч", "Алексей", "Overlordovich", 9093987654L, "ololo@gmail.com", "alexey99", "123456"));
+				userService.addUser(new User(null, null, groups, "Малинин", "Игорь", "Игоревич", 9093745678L, "ololo@gmail.com", "barbie9925", "123456"));
 			}
 		};
 	}

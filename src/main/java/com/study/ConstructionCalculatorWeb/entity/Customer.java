@@ -19,9 +19,12 @@ public class Customer {
     private String surname;
     private String name;
     private String patronymic;
-    private int telephoneNumber;
+    private long telephoneNumber;
     private String email;
     private String address;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Override
     public boolean equals(Object o) {

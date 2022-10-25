@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.ConstructionCalculatorWeb.entity.Customer;
+import com.study.ConstructionCalculatorWeb.service.CustomerService;
 import com.study.ConstructionCalculatorWeb.service.UserService;
 import com.study.ConstructionCalculatorWeb.entity.GroupOfUsers;
 import com.study.ConstructionCalculatorWeb.entity.User;
@@ -30,6 +32,8 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    private CustomerService customerService;
+    @Autowired
     private GroupOfUsersRepository groupOfUsersRepository;
 
     @GetMapping("/users")
@@ -41,6 +45,17 @@ public class UserController {
     public void addUser(@RequestBody User user){
         userService.addUser(user);
         userService.addRoleToUser(user, "ROLE_USER");
+    }
+
+    @PostMapping("/addCustomer")
+    public User addCustomer(@RequestParam String login, @RequestBody Customer customer){
+        User user = userService.getUser(login);
+        return customerService.addCustomerToUser(user, customer);
+    }
+
+    @GetMapping("/customers")
+    public List<Customer> getCustomers(){
+        return customerService.getCustomers();
     }
 
     @GetMapping("/token/refresh")

@@ -1,9 +1,10 @@
-package com.study.ConstructionCalculatorWeb.service;
+package com.study.ConstructionCalculatorWeb.service.ServiceImpl;
 
 import com.study.ConstructionCalculatorWeb.entity.GroupOfUsers;
 import com.study.ConstructionCalculatorWeb.entity.User;
 import com.study.ConstructionCalculatorWeb.repo.GroupOfUsersRepository;
 import com.study.ConstructionCalculatorWeb.repo.UserRepository;
+import com.study.ConstructionCalculatorWeb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
             return;
         }
         Set<GroupOfUsers> groups = user.getGroupOfUsers();
-        if (groups.isEmpty())
+        if (groups == null || groups.isEmpty())
         {
             groups = new HashSet<>();
             groups.add(groupOfUsers);

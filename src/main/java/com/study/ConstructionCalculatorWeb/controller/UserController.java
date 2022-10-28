@@ -12,6 +12,8 @@ import com.study.ConstructionCalculatorWeb.entity.GroupOfUsers;
 import com.study.ConstructionCalculatorWeb.entity.User;
 import com.study.ConstructionCalculatorWeb.repo.GroupOfUsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,14 +50,23 @@ public class UserController {
     }
 
     @PostMapping("/addCustomer")
-    public User addCustomer(@RequestParam String login, @RequestBody Customer customer){
-        User user = userService.getUser(login);
-        return customerService.addCustomerToUser(user, customer);
+    public Customer addCustomer(@RequestBody Customer customer){
+        return customerService.addCustomerToUser(customer);
+    }
+
+    @PatchMapping("/updateCustomer/{id}")
+    public ResponseEntity<?> updateCustomer(@RequestParam Long id, @RequestBody Customer customerDetails){
+        try {
+            return new ResponseEntity<>(customerService.updateCustomer(id, customerDetails), HttpStatus.OK);
+        }
+        catch (Exception ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/customers")
-    public List<Customer> getCustomers(){
-        return customerService.getCustomers();
+    public List<Customer> getCustomersById(@RequestParam long id){
+        return customerService.getCustomersByUser(id);
     }
 
     @GetMapping("/token/refresh")

@@ -11,14 +11,13 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Status {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String statusName;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Calculation> calculations;
 
     @Override
     public boolean equals(Object o) {

@@ -4,14 +4,15 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceList {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -19,9 +20,6 @@ public class PriceList {
     private Date dateOfPurchase;
     private double purchasePrice;
     private double sellingPrice;
-    @ManyToOne
-    @JoinColumn(name = "material_characteristics_id")
-    private MaterialCharacteristics materialCharacteristics;
 
     @Override
     public boolean equals(Object o) {

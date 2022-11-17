@@ -50,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
             oldCustomer.setAddress(newCustomer.getAddress());
             return customerRepository.save(oldCustomer);
         }
-        return null;
+        throw new RuntimeException("Customer with id={" + Long.toString(id) + "} not found!");
     }
 
     @Override

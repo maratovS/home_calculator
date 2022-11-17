@@ -11,16 +11,17 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Material {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String name;
     private String materialType;
-    private String structuralElementType;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<MaterialCharacteristics> materialCharacteristics;
+    @OneToOne
+    @JoinColumn(name = "material_characteristics_id")
+    private MaterialCharacteristics materialCharacteristic;
 
     @Override
     public boolean equals(Object o) {

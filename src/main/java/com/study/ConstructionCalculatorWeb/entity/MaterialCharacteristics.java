@@ -11,7 +11,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaterialCharacteristics {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -21,11 +22,9 @@ public class MaterialCharacteristics {
     private double thickness;
     private double length;
     private double volume;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<PriceList> priceLists;
-    @ManyToOne
-    @JoinColumn(name = "material_id")
-    private Material material;
+    @OneToOne
+    @JoinColumn(name = "price_list_id")
+    private PriceList priceList;
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Results> results;
     @ManyToOne

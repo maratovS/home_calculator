@@ -4,14 +4,15 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Frame {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -22,23 +23,21 @@ public class Frame {
     private double outerWallPerimeter;
     private double baseArea;
     private double externalWallThickness;
-    private double interiorWallLength;
-    private String OSB_exteriorWallCladding;
-    private String vaporBarrierOfExternalWalls;
-    private String windProtectionOfExternalWalls;
-    private String insulationLiningOfExternalWalls;
-    private double floorThickness;
-    private double OSB_forFloors;
-    private double vaporBarrierForFloors;
-    private double roofWindProtection;
-    private double insulationForFloors;
-    private double OSB_forInteriorWallCladding;
-    @OneToMany(mappedBy = "frame")
+    private double internalWallLength;
+    private double internalWallThickness;
+    private String OSBExternalWall;
+    private String steamWaterproofingExternalWall;
+    private String windscreenExternalWall;
+    private String insulationExternalWall;
+    private String overlapThickness;
+    private String OSBThickness;
+    private String steamWaterproofingThickness;
+    private String windscreenProtectionThickness;
+    private String insulationThickness;
+    private String OSBInternalWall;
+    @OneToMany
     @ToString.Exclude
-    private Set<Results> results;
-    @OneToMany(mappedBy = "frame")
-    @ToString.Exclude
-    private Set<aperturesInFrames> apertures;
+    private List<AperturesInFrames> apertures;
 
     @Override
     public boolean equals(Object o) {

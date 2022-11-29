@@ -11,19 +11,17 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Results {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String material;
-    private int amount;
+    private double amount;
     private String units;
     private double price;
     private double totalCost;
-    @ManyToOne
-    @JoinColumn(name = "calculation_id")
-    private Calculation calculation;
     @ManyToOne
     @JoinColumn(name = "foundation_id")
     private Foundation foundation;

@@ -10,25 +10,22 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-public class aperturesInFrames {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AperturesInFrames {
     @EmbeddedId
     private aperturesInFramesKey id;
-    @ManyToOne
-    @MapsId("frameId")
-    @JoinColumn(name = "frame_id")
-    private Frame frame;
     @ManyToOne
     @MapsId("apertureId")
     @JoinColumn(name = "aperture_id")
     private Aperture aperture;
-    private int count;
+    private int amount;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        aperturesInFrames that = (aperturesInFrames) o;
+        AperturesInFrames that = (AperturesInFrames) o;
         return id != null && Objects.equals(id, that.id);
     }
 

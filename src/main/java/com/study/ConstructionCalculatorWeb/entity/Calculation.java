@@ -4,31 +4,27 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Calculation {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
     private String constructionAddress;
-    private int number;
+    private UUID number;
     private Date dataOfCreation;
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
-    @OneToMany(mappedBy = "calculation")
+    @OneToMany
     @ToString.Exclude
-    private Set<Results> results;
+    private List<Results> results;
 
     @Override
     public boolean equals(Object o) {

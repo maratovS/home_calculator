@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,8 +26,6 @@ public class MaterialCharacteristics {
     @OneToOne
     @JoinColumn(name = "price_list_id")
     private PriceList priceList;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Results> results;
     @ManyToOne
     @JoinColumn(name = "unit_id")
     private Unit unit;

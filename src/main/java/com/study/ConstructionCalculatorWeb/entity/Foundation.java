@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class Foundation {
     private String concrete;
     @OneToMany(mappedBy = "foundation")
     @ToString.Exclude
-    private Set<Results> results;
+    private List<Results> results;
 
     @Override
     public boolean equals(Object o) {

@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,7 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -25,6 +27,9 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToMany
+    @ToString.Exclude
+    private List<Calculation> calculations;
 
     @Override
     public boolean equals(Object o) {

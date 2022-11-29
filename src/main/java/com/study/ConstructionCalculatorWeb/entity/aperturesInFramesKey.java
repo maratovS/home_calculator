@@ -8,10 +8,12 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class aperturesInFramesKey implements Serializable {
     @Column(name = "frame_id")
@@ -19,16 +21,4 @@ public class aperturesInFramesKey implements Serializable {
     @Column(name = "aperture_id")
     private Long apertureId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        aperturesInFrames that = (aperturesInFrames) o;
-        return frameId != null && Objects.equals(frameId, that.getFrame().getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(frameId + apertureId);
-    }
 }

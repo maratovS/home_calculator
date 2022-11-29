@@ -2,6 +2,7 @@ package com.study.ConstructionCalculatorWeb;
 
 import com.study.ConstructionCalculatorWeb.entity.*;
 import com.study.ConstructionCalculatorWeb.repo.*;
+import com.study.ConstructionCalculatorWeb.service.FrameService;
 import com.study.ConstructionCalculatorWeb.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,8 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 @SpringBootApplication
 public class ConstructionCalculatorWebApplication {
@@ -34,7 +35,16 @@ public class ConstructionCalculatorWebApplication {
 								 MaterialRepository materialRepository,
 								 MaterialCharacteristicsRepository materialCharacteristicsRepository,
 								 UnitRepository unitRepository,
-								 PriceListRepository priceListRepository){
+								 PriceListRepository priceListRepository,
+								 CustomerRepository customerRepository,
+								 CalculationRepository calculationRepository,
+								 ResultsRepository resultsRepository,
+								 ApertureRepository apertureRepository,
+								 StatusRepository statusRepository,
+								 FrameRepository frameRepository,
+								 AperturesInFramesRepository aperturesInFramesRepository,
+								 FrameService frameService
+	){
 		return (String[] args) -> {
 			if (groupOfUsersRepository.findAll().isEmpty()) {
 				groupOfUsersRepository.save(new GroupOfUsers(null, "ROLE_USER"));
@@ -46,7 +56,7 @@ public class ConstructionCalculatorWebApplication {
 				userStatusRepository.save(new UserStatus(null, "Уволен"));
 			}
 			if (userRepository.findAll().isEmpty()) {
-				Set<GroupOfUsers> groups = new HashSet<>(groupOfUsersRepository.findAll());
+				List<GroupOfUsers> groups = groupOfUsersRepository.findAll();
 				UserStatus status = userStatusRepository.findByStatusName("Числится в штате");
 				userService.addUser(new User(
 						null,
@@ -190,7 +200,6 @@ public class ConstructionCalculatorWebApplication {
 						3,
 						0.05 * 0.1 * 3,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -201,7 +210,6 @@ public class ConstructionCalculatorWebApplication {
 						3,
 						0.05 * 0.15 * 3,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -212,7 +220,6 @@ public class ConstructionCalculatorWebApplication {
 						3,
 						0.05 * 0.2 * 3,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -223,7 +230,6 @@ public class ConstructionCalculatorWebApplication {
 						3,
 						0.05 * 0.25 * 3,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -234,7 +240,6 @@ public class ConstructionCalculatorWebApplication {
 						3,
 						0.05 * 0.3 * 3,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -245,7 +250,6 @@ public class ConstructionCalculatorWebApplication {
 						6,
 						0.05 * 0.1 * 6,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -256,7 +260,6 @@ public class ConstructionCalculatorWebApplication {
 						6,
 						0.05 * 0.15 * 6,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -267,7 +270,6 @@ public class ConstructionCalculatorWebApplication {
 						6,
 						0.05 * 0.2 * 6,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -278,7 +280,6 @@ public class ConstructionCalculatorWebApplication {
 						6,
 						0.05 * 0.25 * 6,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -289,7 +290,6 @@ public class ConstructionCalculatorWebApplication {
 						6,
 						0.05 * 0.3 * 6,
 						priceListRepository.findByPurchasePrice(12000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -300,7 +300,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.09,
 						priceListRepository.findByPurchasePrice(256),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -311,7 +310,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.1,
 						priceListRepository.findByPurchasePrice(288),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -322,7 +320,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.15,
 						priceListRepository.findByPurchasePrice(384),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -333,7 +330,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.18,
 						priceListRepository.findByPurchasePrice(480),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -344,7 +340,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.1,
 						priceListRepository.findByPurchasePrice(3000),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -355,7 +350,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.1,
 						priceListRepository.findByPurchasePrice(3500),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -366,7 +360,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.1,
 						priceListRepository.findByPurchasePrice(2800),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -375,9 +368,8 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.15,
 						1,
-						0.1,
+						0.15,
 						priceListRepository.findByPurchasePrice(2800),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -386,9 +378,8 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.2,
 						1,
-						0.1,
+						0.2,
 						priceListRepository.findByPurchasePrice(2800),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -397,9 +388,8 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.2,
 						1,
-						0.1,
+						0.2,
 						priceListRepository.findByPurchasePrice(3200),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -408,9 +398,8 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						0.25,
 						1,
-						0.1,
+						0.25,
 						priceListRepository.findByPurchasePrice(2800),
-						null,
 						unitRepository.findByName("м3")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -421,7 +410,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(33),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -432,7 +420,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(20),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -443,7 +430,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(21),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -454,7 +440,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(11),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -465,7 +450,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(57),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -476,7 +460,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(21),
-						null,
 						unitRepository.findByName("м2")
 				));
 				materialCharacteristicsRepository.save(new MaterialCharacteristics(
@@ -487,7 +470,6 @@ public class ConstructionCalculatorWebApplication {
 						1,
 						1,
 						priceListRepository.findByPurchasePrice(53),
-						null,
 						unitRepository.findByName("м2")
 				));
 			}
@@ -659,6 +641,43 @@ public class ConstructionCalculatorWebApplication {
 						"Гидро-ветрозащита Тип А",
 						"Ветрозащита",
 						materialCharacteristicsRepository.findByName("Гидро-ветрозащита Тип А")
+				));
+			}
+			if (statusRepository.findAll().isEmpty()){
+				statusRepository.save(new Status(
+						null,
+						"Актуален"
+				));
+				statusRepository.save(new Status(
+						null,
+						"Заключен договор"
+				));
+				statusRepository.save(new Status(
+						null,
+						"Не актуален"
+				));
+			}
+			if (customerRepository.findAll().isEmpty()){
+				User user = userRepository.findByLogin("overlord");
+				Calculation c = calculationRepository.save( new Calculation(
+						null,
+						"Московское шоссе, 34Б",
+						UUID.randomUUID(),
+						new Date(System.currentTimeMillis()),
+						statusRepository.findByStatusName("Актуален"),
+						null
+				));
+
+				customerRepository.save(new Customer(
+						null,
+						"Тестов",
+						"Тест",
+						"Тестович",
+						8005553535L,
+						"qwerty@gmail.com",
+						"Московское шоссе, 34Б",
+						user,
+						List.of(calculationRepository.findByNumber(c.getNumber()))
 				));
 			}
 		};

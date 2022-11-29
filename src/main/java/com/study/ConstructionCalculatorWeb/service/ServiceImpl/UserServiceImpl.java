@@ -46,10 +46,10 @@ public class UserServiceImpl implements UserService {
         if (groupOfUsers == null) {
             return;
         }
-        Set<GroupOfUsers> groups = user.getGroupOfUsers();
+        List<GroupOfUsers> groups = user.getGroupOfUsers();
         if (groups == null || groups.isEmpty())
         {
-            groups = new HashSet<>();
+            groups = new ArrayList<>();
             groups.add(groupOfUsers);
             user.setGroupOfUsers(groups);
         } else {

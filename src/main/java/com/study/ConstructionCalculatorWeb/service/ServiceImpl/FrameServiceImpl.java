@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,7 +21,8 @@ public class FrameServiceImpl implements FrameService {
     private CalculationRepository calculationRepository;
     @Autowired
     private MaterialCharacteristicsRepository materialCharacteristicsRepository;
-
+    @Autowired
+    private CustomerRepository customerRepository;
     @Autowired
     private MaterialRepository materialRepository;
     @Autowired
@@ -53,6 +55,12 @@ public class FrameServiceImpl implements FrameService {
     @Override
     public List<Results> getResults(UUID calculationNumber) {
         return calculationRepository.findByNumber(calculationNumber).getResults();
+    }
+
+    @Override
+    public List<Calculation> getCalculations(Long id) {
+        Optional<Customer> calculations = customerRepository.findById(id);
+        return calculations.map(Customer::getCalculations).orElse(null);
     }
 
     @Override

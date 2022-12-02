@@ -35,6 +35,11 @@ public class CustomerController {
         return frameService.addCalculation(calculation);
     }
 
+    @GetMapping("getCalculation")
+    List<Calculation> getCalculationsByCustomer(@RequestParam Long id){
+        return frameService.getCalculations(id);
+    }
+
     @PostMapping("/addFrame")
     List<Results> addFrame(@RequestBody Frame frame, @RequestParam UUID calculationNumber){
         Frame frameSaved = frameService.addFrame(frame);

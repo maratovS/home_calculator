@@ -10,6 +10,7 @@ public interface FrameService {
     List<Material> getMaterials();
     List<Results> getResults(UUID calculationNumber);
     List<Results> doBusiness(Calculation calculation, Frame frame);
+    List<Calculation> getCalculations(Long id);
     Calculation getCalculation(UUID calculationNumber);
     Calculation addCalculation(Calculation calculation);
     Status getStatusByName(String name);

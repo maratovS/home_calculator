@@ -35,7 +35,7 @@ public class CustomerController {
         return frameService.addCalculation(calculation);
     }
 
-    @GetMapping("getCalculation")
+    @GetMapping("/getCalculation")
     List<Calculation> getCalculationsByCustomer(@RequestParam Long id){
         return frameService.getCalculations(id);
     }

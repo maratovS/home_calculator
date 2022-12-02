@@ -6,10 +6,7 @@ import com.study.ConstructionCalculatorWeb.service.FrameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FrameServiceImpl implements FrameService {
@@ -38,8 +35,19 @@ public class FrameServiceImpl implements FrameService {
     }
 
     @Override
-    public Calculation addCalculation(Calculation calculation) {
-        return calculationRepository.save(calculation);
+    public Calculation addCalculation(Long id, Calculation calculation) {
+        calculation = calculationRepository.save(calculation);
+        Customer customer = customerRepository.findById(id).get();
+        List<Calculation> calculations = customer.getCalculations();
+        if (calculations == null || calculations.isEmpty()){
+            calculations = new ArrayList<>();
+            calculations.add(calculation);
+        }
+        else
+            calculations.add(calculation);
+        customer.setCalculations(calculations);
+        customerRepository.save(customer);
+        return calculation;
     }
 
     @Override
@@ -159,6 +167,41 @@ public class FrameServiceImpl implements FrameService {
                 frame,
                 materialCharacteristics
         ));
+
+
+        // ВНУТРЕННИЕ СТЕНЫ
+        int amountOfRacksInternalWalls = (int)Math.round(frame.getInternalWallLength() / 0.6);
+        int amountOfRacksApertures = (int)Math.round(aperturesPerimeter / 3);
+        materialCharacteristics =
+                materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, frame.getInternalWallThickness(), height);
+        double racksVolume = (amountOfRacksApertures + amountOfRacksInternalWalls) * materialCharacteristics.getVolume();
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                racksVolume,
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                racksVolume * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
+        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBInternalWall());
+        double areaOfInternalWalls = frame.getInternalWallLength() * height;
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                areaOfInternalWalls * 2 * 1.15,
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                areaOfInternalWalls * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
+        // ПЕРЕКРЫТИЯ
 
 
         results = resultsRepository.saveAll(results);

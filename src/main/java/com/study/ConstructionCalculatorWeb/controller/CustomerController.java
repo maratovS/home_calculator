@@ -29,10 +29,10 @@ public class CustomerController {
     }
 
     @PostMapping("/addCalculation")
-    Calculation addCalculation(@RequestBody Calculation calculation){
+    Calculation addCalculation(@RequestParam Long id, @RequestBody Calculation calculation){
         calculation.setStatus(frameService.getStatusByName("Актуален"));
         calculation.setNumber(UUID.randomUUID());
-        return frameService.addCalculation(calculation);
+        return frameService.addCalculation(id, calculation);
     }
 
     @GetMapping("/getCalculation")

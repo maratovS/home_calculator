@@ -12,6 +12,6 @@ public interface FrameService {
     List<Results> doBusiness(Calculation calculation, Frame frame);
     List<Calculation> getCalculations(Long id);
     Calculation getCalculation(UUID calculationNumber);
-    Calculation addCalculation(Calculation calculation);
+    Calculation addCalculation(Long id, Calculation calculation);
     Status getStatusByName(String name);
 }

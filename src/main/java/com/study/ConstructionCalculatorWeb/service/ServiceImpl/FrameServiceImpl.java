@@ -36,18 +36,18 @@ public class FrameServiceImpl implements FrameService {
 
     @Override
     public Calculation addCalculation(Long id, Calculation calculation) {
-        calculation = calculationRepository.save(calculation);
+        Calculation calculationSaved = calculationRepository.save(calculation);
         Customer customer = customerRepository.findById(id).get();
         List<Calculation> calculations = customer.getCalculations();
         if (calculations == null || calculations.isEmpty()){
             calculations = new ArrayList<>();
-            calculations.add(calculation);
+            calculations.add(calculationSaved);
         }
         else
-            calculations.add(calculation);
+            calculations.add(calculationSaved);
         customer.setCalculations(calculations);
         customerRepository.save(customer);
-        return calculation;
+        return calculationSaved;
     }
 
     @Override
@@ -202,6 +202,80 @@ public class FrameServiceImpl implements FrameService {
         ));
 
         // ПЕРЕКРЫТИЯ
+        int amountOfRacksBase = (int)Math.round(frame.getBaseArea() / 0.7);
+        materialCharacteristics =
+                materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, frame.getOverlapThickness(), 6.0);
+        double volumeOfRacksOverlap = amountOfRacksBase * 2 * materialCharacteristics.getVolume();
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                volumeOfRacksOverlap,
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                volumeOfRacksOverlap * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
+        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBThickness());
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                frame.getBaseArea() * 2 * 2 * 1.15,
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                frame.getBaseArea() * 2 * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
+
+        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingThickness());
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                frame.getBaseArea() * 1.15,
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
+        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenProtectionThickness());
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                frame.getBaseArea() * 1.15,
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
+        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationThickness());
+        double areaOfInsulation = frame.getBaseArea() * 1.1;
+        if(frame.getFloorNumber() == 1){
+            areaOfInsulation *= 2;
+        }
+
+        results.add(new Results(
+                null,
+                materialCharacteristics.getName(),
+                areaOfInsulation * materialCharacteristics.getVolume(),
+                materialCharacteristics.getUnit().getName(),
+                materialCharacteristics.getPriceList().getSellingPrice(),
+                areaOfInsulation * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                null,
+                frame,
+                materialCharacteristics
+        ));
+
 
 
         results = resultsRepository.saveAll(results);

@@ -29,7 +29,7 @@ public class Frame {
     private String steamWaterproofingExternalWall;
     private String windscreenExternalWall;
     private String insulationExternalWall;
-    private String overlapThickness;
+    private double overlapThickness;
     private String OSBThickness;
     private String steamWaterproofingThickness;
     private String windscreenProtectionThickness;

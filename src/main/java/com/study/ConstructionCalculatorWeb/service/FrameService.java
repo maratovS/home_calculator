@@ -13,5 +13,6 @@ public interface FrameService {
     List<Calculation> getCalculations(Long id);
     Calculation getCalculation(UUID calculationNumber);
     Calculation addCalculation(Long id, Calculation calculation);
+    void deleteCalculation(UUID calculationNumber);
     Status getStatusByName(String name);
 }

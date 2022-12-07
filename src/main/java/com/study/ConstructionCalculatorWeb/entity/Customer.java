@@ -2,6 +2,7 @@ package com.study.ConstructionCalculatorWeb.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,8 +28,8 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany
-    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "calculation_id")
     private List<Calculation> calculations;
 
     @Override

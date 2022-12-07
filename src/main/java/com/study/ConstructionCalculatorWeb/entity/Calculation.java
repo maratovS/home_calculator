@@ -22,7 +22,7 @@ public class Calculation {
     @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Results> results;
 

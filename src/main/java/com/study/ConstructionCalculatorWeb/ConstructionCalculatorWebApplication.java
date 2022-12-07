@@ -679,6 +679,7 @@ public class ConstructionCalculatorWebApplication {
 						user,
 						List.of(calculationRepository.findByNumber(c.getNumber()))
 				));
+				System.out.println(c.getNumber());
 			}
 		};
 	}

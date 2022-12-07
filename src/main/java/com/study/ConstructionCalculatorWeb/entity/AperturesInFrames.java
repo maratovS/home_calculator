@@ -15,7 +15,7 @@ import java.util.Objects;
 public class AperturesInFrames {
     @EmbeddedId
     private aperturesInFramesKey id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("apertureId")
     @JoinColumn(name = "aperture_id")
     private Aperture aperture;

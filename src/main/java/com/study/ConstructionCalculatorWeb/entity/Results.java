@@ -23,10 +23,10 @@ public class Results {
     private String units;
     private double price;
     private double totalCost;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "foundation_id")
     private Foundation foundation;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "frame_id")
     private Frame frame;
     @ManyToOne

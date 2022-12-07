@@ -35,7 +35,7 @@ public class Frame {
     private String windscreenProtectionThickness;
     private String insulationThickness;
     private String OSBInternalWall;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<AperturesInFrames> apertures;
 

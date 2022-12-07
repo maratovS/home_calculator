@@ -7,6 +7,8 @@ import com.study.ConstructionCalculatorWeb.entity.Material;
 import com.study.ConstructionCalculatorWeb.entity.Results;
 import com.study.ConstructionCalculatorWeb.service.FrameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +48,15 @@ public class CustomerController {
         return frameService.doBusiness(frameService.getCalculation(calculationNumber), frameSaved);
     }
 
+    @PostMapping("/deleteCalculation")
+    ResponseEntity<?> addCalculation(@RequestParam UUID calculationNumber){
+        try {
+            frameService.deleteCalculation(calculationNumber);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (RuntimeException ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
+    }
 }

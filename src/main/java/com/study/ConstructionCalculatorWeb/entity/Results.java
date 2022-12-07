@@ -17,6 +17,7 @@ public class Results {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+    private String partOfFloor;
     private String material;
     private double amount;
     private String units;

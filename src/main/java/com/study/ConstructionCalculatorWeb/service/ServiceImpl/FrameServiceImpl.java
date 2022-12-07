@@ -110,6 +110,7 @@ public class FrameServiceImpl implements FrameService {
         MaterialCharacteristics materialCharacteristics = materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, thickness, height);
         results.add( new Results(
                 null,
+                "Внешние стены",
                 materialCharacteristics.getName(),
                 amountOfRacks * materialCharacteristics.getVolume(),
                 materialCharacteristics.getUnit().getName(),
@@ -122,6 +123,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBExternalWall());
         results.add( new Results(
                 null,
+                "Внешние стены",
                 materialCharacteristics.getName(),
                 perimeter * height * 2 * 1.15 * materialCharacteristics.getVolume(),
                 materialCharacteristics.getUnit().getName(),
@@ -134,6 +136,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingExternalWall());
         results.add( new Results(
                 null,
+                "Внешние стены",
                 materialCharacteristics.getName(),
                 perimeter * height  * 1.15 * materialCharacteristics.getVolume(),
                 materialCharacteristics.getUnit().getName(),
@@ -146,6 +149,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenExternalWall());
         results.add( new Results(
                 null,
+                "Внешние стены",
                 materialCharacteristics.getName(),
                 perimeter * height  * 1.15 * materialCharacteristics.getVolume(),
                 materialCharacteristics.getUnit().getName(),
@@ -158,6 +162,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationExternalWall());
         results.add( new Results(
                 null,
+                "Внешние стены",
                 materialCharacteristics.getName(),
                 (perimeter * height - aperturesArea)  * 1.10 * materialCharacteristics.getVolume(),
                 materialCharacteristics.getUnit().getName(),
@@ -177,6 +182,7 @@ public class FrameServiceImpl implements FrameService {
         double racksVolume = (amountOfRacksApertures + amountOfRacksInternalWalls) * materialCharacteristics.getVolume();
         results.add(new Results(
                 null,
+                "Внутренние стены",
                 materialCharacteristics.getName(),
                 racksVolume,
                 materialCharacteristics.getUnit().getName(),
@@ -191,6 +197,7 @@ public class FrameServiceImpl implements FrameService {
         double areaOfInternalWalls = frame.getInternalWallLength() * height;
         results.add(new Results(
                 null,
+                "Внутренние стены",
                 materialCharacteristics.getName(),
                 areaOfInternalWalls * 2 * 1.15,
                 materialCharacteristics.getUnit().getName(),
@@ -208,6 +215,7 @@ public class FrameServiceImpl implements FrameService {
         double volumeOfRacksOverlap = amountOfRacksBase * 2 * materialCharacteristics.getVolume();
         results.add(new Results(
                 null,
+                "Перекрытия",
                 materialCharacteristics.getName(),
                 volumeOfRacksOverlap,
                 materialCharacteristics.getUnit().getName(),
@@ -221,6 +229,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBThickness());
         results.add(new Results(
                 null,
+                "Перекрытия",
                 materialCharacteristics.getName(),
                 frame.getBaseArea() * 2 * 2 * 1.15,
                 materialCharacteristics.getUnit().getName(),
@@ -235,6 +244,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingThickness());
         results.add(new Results(
                 null,
+                "Перекрытия",
                 materialCharacteristics.getName(),
                 frame.getBaseArea() * 1.15,
                 materialCharacteristics.getUnit().getName(),
@@ -248,6 +258,7 @@ public class FrameServiceImpl implements FrameService {
         materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenProtectionThickness());
         results.add(new Results(
                 null,
+                "Перекрытия",
                 materialCharacteristics.getName(),
                 frame.getBaseArea() * 1.15,
                 materialCharacteristics.getUnit().getName(),
@@ -266,6 +277,7 @@ public class FrameServiceImpl implements FrameService {
 
         results.add(new Results(
                 null,
+                "Перекрытия",
                 materialCharacteristics.getName(),
                 areaOfInsulation * materialCharacteristics.getVolume(),
                 materialCharacteristics.getUnit().getName(),

@@ -95,7 +95,7 @@ public class FrameServiceImpl implements FrameService {
         double perimeter = frame.getOuterWallPerimeter();
         List<AperturesInFrames> apertures = frame.getApertures();
         double thickness = frame.getExternalWallThickness();
-        double height = frame.getFloorHeight();
+        double height = 3;
         double width = 0.05;
         int amountOfRacks = (int)Math.round(perimeter / 0.6); // внешние стойки
         amountOfRacks += (int)Math.round(perimeter * 2 / 3);

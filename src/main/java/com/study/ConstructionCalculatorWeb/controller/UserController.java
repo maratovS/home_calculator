@@ -45,7 +45,6 @@ public class UserController {
     @PostMapping("/addUser")
     public void addUser(@RequestBody User user){
         userService.addUser(user);
-        userService.addRoleToUser(user, "ROLE_USER");
     }
 
     @PostMapping("/addCustomer")

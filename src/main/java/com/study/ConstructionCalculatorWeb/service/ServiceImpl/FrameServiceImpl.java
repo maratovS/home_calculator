@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FrameServiceImpl implements FrameService {
@@ -38,7 +37,9 @@ public class FrameServiceImpl implements FrameService {
     @Override
     public Calculation addCalculation(Long id, Calculation calculation) {
         Calculation calculationSaved = calculationRepository.save(calculation);
-        Customer customer = customerRepository.findById(id).get();
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> {
+            throw new RuntimeException("Customer not found");
+        });
         List<Calculation> calculations = customer.getCalculations();
         if (calculations == null || calculations.isEmpty()){
             calculations = new ArrayList<>();
@@ -74,19 +75,21 @@ public class FrameServiceImpl implements FrameService {
 
     @Override
     public Frame addFrame(Frame frame) {
-        List<Aperture> apertures = apertureRepository.saveAll(
-                frame
-                .getApertures()
-                .stream()
-                .map(AperturesInFrames::getAperture).toList());
-        List<AperturesInFrames> aperturesInFrames = frame.getApertures();
-        frame.setApertures(null);
-        frame = frameRepository.save(frame);
-        for (int i = 0; i < apertures.size(); i++){
-            aperturesInFrames.get(i).setId(new aperturesInFramesKey(frame.getId(), apertures.get(i).getId()));
-            aperturesInFrames.get(i).setAperture(apertures.get(i));
+        if (frame.getApertures() != null) {
+            List<Aperture> apertures = apertureRepository.saveAll(
+                    frame
+                            .getApertures()
+                            .stream()
+                            .map(AperturesInFrames::getAperture).toList());
+            List<AperturesInFrames> aperturesInFrames = frame.getApertures();
+            frame.setApertures(null);
+            frame = frameRepository.save(frame);
+            for (int i = 0; i < apertures.size(); i++) {
+                aperturesInFrames.get(i).setId(new aperturesInFramesKey(frame.getId(), apertures.get(i).getId()));
+                aperturesInFrames.get(i).setAperture(apertures.get(i));
+            }
+            frame.setApertures(aperturesInFramesRepository.saveAll(aperturesInFrames));
         }
-        frame.setApertures(aperturesInFramesRepository.saveAll(aperturesInFrames));
         return frameRepository.save(frame);
     }
 
@@ -102,11 +105,16 @@ public class FrameServiceImpl implements FrameService {
         amountOfRacks += (int)Math.round(perimeter * 2 / 3);
         double aperturesPerimeter = 0.0;
         double aperturesArea = 0.0;
-        for (AperturesInFrames current : apertures) {
-            aperturesArea += current.getAperture().getHeight() * current.getAperture().getWeight();
-            aperturesPerimeter += current.getAmount() *
-                    2 * (current.getAperture().getHeight() + current.getAperture().getWeight());
+        if (apertures != null) {
+            for (AperturesInFrames current : apertures) {
+                if (current.getAperture().getType().equals("Дверные проемы внешние") || current.getAperture().getType().equals("Оконные проемы")) {
+                    aperturesArea += current.getAperture().getHeight() * current.getAperture().getWeight() * current.getAmount();
+                    aperturesPerimeter += current.getAmount() *
+                            2 * (current.getAperture().getHeight() + current.getAperture().getWeight());
+                }
+            }
         }
+
         amountOfRacks += (int)Math.round(aperturesPerimeter * 2 / 3);
         MaterialCharacteristics materialCharacteristics = materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, thickness, height);
         results.add( new Results(
@@ -121,63 +129,80 @@ public class FrameServiceImpl implements FrameService {
                 frame,
                 materialCharacteristics
         ));
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBExternalWall());
-        results.add( new Results(
-                null,
-                "Внешние стены",
-                materialCharacteristics.getName(),
-                perimeter * height * 2 * 1.15 * materialCharacteristics.getVolume(),
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                perimeter * height * 2 * 1.15 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingExternalWall());
-        results.add( new Results(
-                null,
-                "Внешние стены",
-                materialCharacteristics.getName(),
-                perimeter * height  * 1.15 * materialCharacteristics.getVolume(),
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                perimeter * height * 1.15 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenExternalWall());
-        results.add( new Results(
-                null,
-                "Внешние стены",
-                materialCharacteristics.getName(),
-                perimeter * height  * 1.15 * materialCharacteristics.getVolume(),
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                perimeter * height * 1.15 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationExternalWall());
-        results.add( new Results(
-                null,
-                "Внешние стены",
-                materialCharacteristics.getName(),
-                (perimeter * height - aperturesArea)  * 1.10 * materialCharacteristics.getVolume(),
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                (perimeter * height - aperturesArea) * 1.10 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-
+        if (frame.getOSBExternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getOSBExternalWall())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBExternalWall());
+            results.add(new Results(
+                    null,
+                    "Внешние стены",
+                    materialCharacteristics.getName(),
+                    perimeter * height * 2 * 1.15 * materialCharacteristics.getVolume(),
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    perimeter * height * 2 * 1.15 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
+        if (frame.getSteamWaterproofingExternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getSteamWaterproofingExternalWall())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingExternalWall());
+            results.add(new Results(
+                    null,
+                    "Внешние стены",
+                    materialCharacteristics.getName(),
+                    perimeter * height * 1.15 * materialCharacteristics.getVolume(),
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    perimeter * height * 1.15 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
+        if (frame.getWindscreenExternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getWindscreenExternalWall())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenExternalWall());
+            results.add(new Results(
+                    null,
+                    "Внешние стены",
+                    materialCharacteristics.getName(),
+                    perimeter * height * 1.15 * materialCharacteristics.getVolume(),
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    perimeter * height * 1.15 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
+        if (frame.getInsulationExternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getInsulationExternalWall())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationExternalWall());
+            results.add(new Results(
+                    null,
+                    "Внешние стены",
+                    materialCharacteristics.getName(),
+                    (perimeter * height - aperturesArea) * 1.10 * materialCharacteristics.getVolume(),
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    (perimeter * height - aperturesArea) * 1.10 * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
 
         // ВНУТРЕННИЕ СТЕНЫ
         int amountOfRacksInternalWalls = (int)Math.round(frame.getInternalWallLength() / 0.6);
-        int amountOfRacksApertures = (int)Math.round(aperturesPerimeter / 3);
+        int amountOfRacksApertures = 0; //(int)Math.round(aperturesPerimeter / 3);
+
+        if (apertures != null) {
+            for (AperturesInFrames current : apertures) {
+                if (current.getAperture().getType().equals("Дверные проемы внутренние")) {
+                    amountOfRacksApertures += (int) Math.round(current.getAmount() *
+                            2 * (current.getAperture().getHeight() + current.getAperture().getWeight()) / 3);
+                }
+            }
+        }
+
         materialCharacteristics =
                 materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, frame.getInternalWallThickness(), height);
         double racksVolume = (amountOfRacksApertures + amountOfRacksInternalWalls) * materialCharacteristics.getVolume();
@@ -194,20 +219,22 @@ public class FrameServiceImpl implements FrameService {
                 materialCharacteristics
         ));
 
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBInternalWall());
-        double areaOfInternalWalls = frame.getInternalWallLength() * height;
-        results.add(new Results(
-                null,
-                "Внутренние стены",
-                materialCharacteristics.getName(),
-                areaOfInternalWalls * 2 * 1.15,
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                areaOfInternalWalls * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
+        if (frame.getOSBInternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getOSBInternalWall())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBInternalWall());
+            double areaOfInternalWalls = frame.getInternalWallLength() * height;
+            results.add(new Results(
+                    null,
+                    "Внутренние стены",
+                    materialCharacteristics.getName(),
+                    areaOfInternalWalls * 2 * 1.15,
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    areaOfInternalWalls * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
 
         // ПЕРЕКРЫТИЯ
         int amountOfRacksBase = (int)Math.round(frame.getBaseArea() / 0.7);
@@ -227,68 +254,74 @@ public class FrameServiceImpl implements FrameService {
                 materialCharacteristics
         ));
 
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBThickness());
-        results.add(new Results(
-                null,
-                "Перекрытия",
-                materialCharacteristics.getName(),
-                frame.getBaseArea() * 2 * 2 * 1.15,
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                frame.getBaseArea() * 2 * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-
-
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingThickness());
-        results.add(new Results(
-                null,
-                "Перекрытия",
-                materialCharacteristics.getName(),
-                frame.getBaseArea() * 1.15,
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenProtectionThickness());
-        results.add(new Results(
-                null,
-                "Перекрытия",
-                materialCharacteristics.getName(),
-                frame.getBaseArea() * 1.15,
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
-
-        materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationThickness());
-        double areaOfInsulation = frame.getBaseArea() * 1.1;
-        if(frame.getFloorNumber() == 1){
-            areaOfInsulation *= 2;
+        if (frame.getOSBInternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getOSBThickness())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBThickness());
+            results.add(new Results(
+                    null,
+                    "Перекрытия",
+                    materialCharacteristics.getName(),
+                    frame.getBaseArea() * 2 * 2 * 1.15,
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    frame.getBaseArea() * 2 * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
         }
 
-        results.add(new Results(
-                null,
-                "Перекрытия",
-                materialCharacteristics.getName(),
-                areaOfInsulation * materialCharacteristics.getVolume(),
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                areaOfInsulation * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
+        if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getSteamWaterproofingThickness())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingThickness());
+            results.add(new Results(
+                    null,
+                    "Перекрытия",
+                    materialCharacteristics.getName(),
+                    frame.getBaseArea() * 1.15,
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
 
+        if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getWindscreenProtectionThickness())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenProtectionThickness());
+            results.add(new Results(
+                    null,
+                    "Перекрытия",
+                    materialCharacteristics.getName(),
+                    frame.getBaseArea() * 1.15,
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
+
+        if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getInsulationThickness())) {
+            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationThickness());
+            double areaOfInsulation = frame.getBaseArea() * 1.1;
+            if (frame.getFloorNumber() == 1) {
+                areaOfInsulation *= 2;
+            }
+
+            results.add(new Results(
+                    null,
+                    "Перекрытия",
+                    materialCharacteristics.getName(),
+                    areaOfInsulation * materialCharacteristics.getVolume(),
+                    materialCharacteristics.getUnit().getName(),
+                    materialCharacteristics.getPriceList().getSellingPrice(),
+                    areaOfInsulation * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                    null,
+                    frame,
+                    materialCharacteristics
+            ));
+        }
 
 
         results = resultsRepository.saveAll(results);

@@ -59,4 +59,14 @@ public class CustomerController {
         }
 
     }
+
+    @PatchMapping("/updateFrame")
+    List<Results> updateFrame(@RequestBody Frame frame, @RequestParam UUID calculationNumber, @RequestParam Long id){
+        Calculation calculation = frameService.getCalculation(calculationNumber);
+        frameService.deleteCalculation(calculationNumber);
+        calculation.setResults(null);
+        calculation = frameService.addCalculation(id, calculation);
+        Frame frameSaved = frameService.addFrame(frame);
+        return frameService.doBusiness(calculation, frameSaved);
+    }
 }

@@ -93,6 +93,21 @@ public class FrameServiceImpl implements FrameService {
         return frameRepository.save(frame);
     }
 
+
+    @Override
+    public List<Results> updateFrame(Frame frame, UUID calculationNumber) {
+        Calculation calculation = this.getCalculation(calculationNumber);
+        List<Results> resultsToReplace = calculation
+                .getResults()
+                .stream()
+                .filter(s ->
+                        Objects.equals(
+                                s.getFrame().getId(), frame.getId()
+                        )).toList();
+        resultsRepository.deleteAll(resultsToReplace);
+        return this.doBusiness(calculation, frame);
+    }
+
     @Override
     public List<Results> doBusiness(Calculation calculation, Frame frame) {
         List<Results> results = new ArrayList<>();

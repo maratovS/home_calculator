@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface FrameService {
     Frame addFrame(Frame frame);
+    List<Results> updateFrame(Frame frame, UUID calculationNumber);
     List<Material> getMaterials();
     List<Results> getResults(UUID calculationNumber);
     List<Results> doBusiness(Calculation calculation, Frame frame);

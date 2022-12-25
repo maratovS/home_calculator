@@ -259,90 +259,93 @@ public class FrameServiceImpl implements FrameService {
         }
 
         // ПЕРЕКРЫТИЯ
-        int amountOfRacksBase = (int)Math.round(frame.getBaseArea() / 0.7);
-        materialCharacteristics =
-                materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, frame.getOverlapThickness(), 6.0);
-        double volumeOfRacksOverlap = amountOfRacksBase * 2 * materialCharacteristics.getVolume();
-        results.add(new Results(
-                null,
-                "Перекрытия",
-                materialCharacteristics.getName(),
-                volumeOfRacksOverlap,
-                materialCharacteristics.getUnit().getName(),
-                materialCharacteristics.getPriceList().getSellingPrice(),
-                volumeOfRacksOverlap * materialCharacteristics.getPriceList().getSellingPrice(),
-                null,
-                frame,
-                materialCharacteristics
-        ));
 
-        if (frame.getOSBInternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getOSBThickness())) {
-            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBThickness());
+        if (frame.getOverlapThickness() != null) {
+            int amountOfRacksBase = (int) Math.round(frame.getBaseArea() / 0.7);
+            materialCharacteristics =
+                    materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, frame.getOverlapThickness(), 6.0);
+            double volumeOfRacksOverlap = amountOfRacksBase * 2 * materialCharacteristics.getVolume();
             results.add(new Results(
                     null,
                     "Перекрытия",
                     materialCharacteristics.getName(),
-                    frame.getBaseArea() * 2 * 2 * 1.15,
+                    volumeOfRacksOverlap,
                     materialCharacteristics.getUnit().getName(),
                     materialCharacteristics.getPriceList().getSellingPrice(),
-                    frame.getBaseArea() * 2 * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                    volumeOfRacksOverlap * materialCharacteristics.getPriceList().getSellingPrice(),
                     null,
                     frame,
                     materialCharacteristics
             ));
-        }
 
-        if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getSteamWaterproofingThickness())) {
-            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingThickness());
-            results.add(new Results(
-                    null,
-                    "Перекрытия",
-                    materialCharacteristics.getName(),
-                    frame.getBaseArea() * 1.15,
-                    materialCharacteristics.getUnit().getName(),
-                    materialCharacteristics.getPriceList().getSellingPrice(),
-                    frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
-                    null,
-                    frame,
-                    materialCharacteristics
-            ));
-        }
-
-        if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getWindscreenProtectionThickness())) {
-            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenProtectionThickness());
-            results.add(new Results(
-                    null,
-                    "Перекрытия",
-                    materialCharacteristics.getName(),
-                    frame.getBaseArea() * 1.15,
-                    materialCharacteristics.getUnit().getName(),
-                    materialCharacteristics.getPriceList().getSellingPrice(),
-                    frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
-                    null,
-                    frame,
-                    materialCharacteristics
-            ));
-        }
-
-        if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getInsulationThickness())) {
-            materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationThickness());
-            double areaOfInsulation = frame.getBaseArea() * 1.1;
-            if (frame.getFloorNumber() == 1) {
-                areaOfInsulation *= 2;
+            if (frame.getOSBInternalWall() != null && materialCharacteristicsRepository.existsByName(frame.getOSBThickness())) {
+                materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getOSBThickness());
+                results.add(new Results(
+                        null,
+                        "Перекрытия",
+                        materialCharacteristics.getName(),
+                        frame.getBaseArea() * 2 * 2 * 1.15,
+                        materialCharacteristics.getUnit().getName(),
+                        materialCharacteristics.getPriceList().getSellingPrice(),
+                        frame.getBaseArea() * 2 * 2 * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                        null,
+                        frame,
+                        materialCharacteristics
+                ));
             }
 
-            results.add(new Results(
-                    null,
-                    "Перекрытия",
-                    materialCharacteristics.getName(),
-                    areaOfInsulation * materialCharacteristics.getVolume(),
-                    materialCharacteristics.getUnit().getName(),
-                    materialCharacteristics.getPriceList().getSellingPrice(),
-                    areaOfInsulation * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
-                    null,
-                    frame,
-                    materialCharacteristics
-            ));
+            if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getSteamWaterproofingThickness())) {
+                materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getSteamWaterproofingThickness());
+                results.add(new Results(
+                        null,
+                        "Перекрытия",
+                        materialCharacteristics.getName(),
+                        frame.getBaseArea() * 1.15,
+                        materialCharacteristics.getUnit().getName(),
+                        materialCharacteristics.getPriceList().getSellingPrice(),
+                        frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                        null,
+                        frame,
+                        materialCharacteristics
+                ));
+            }
+
+            if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getWindscreenProtectionThickness())) {
+                materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getWindscreenProtectionThickness());
+                results.add(new Results(
+                        null,
+                        "Перекрытия",
+                        materialCharacteristics.getName(),
+                        frame.getBaseArea() * 1.15,
+                        materialCharacteristics.getUnit().getName(),
+                        materialCharacteristics.getPriceList().getSellingPrice(),
+                        frame.getBaseArea() * 1.15 * materialCharacteristics.getPriceList().getSellingPrice(),
+                        null,
+                        frame,
+                        materialCharacteristics
+                ));
+            }
+
+            if (frame.getSteamWaterproofingThickness() != null && materialCharacteristicsRepository.existsByName(frame.getInsulationThickness())) {
+                materialCharacteristics = materialCharacteristicsRepository.findByName(frame.getInsulationThickness());
+                double areaOfInsulation = frame.getBaseArea() * 1.1;
+                if (frame.getFloorNumber() == 1) {
+                    areaOfInsulation *= 2;
+                }
+
+                results.add(new Results(
+                        null,
+                        "Перекрытия",
+                        materialCharacteristics.getName(),
+                        areaOfInsulation * materialCharacteristics.getVolume(),
+                        materialCharacteristics.getUnit().getName(),
+                        materialCharacteristics.getPriceList().getSellingPrice(),
+                        areaOfInsulation * materialCharacteristics.getVolume() * materialCharacteristics.getPriceList().getSellingPrice(),
+                        null,
+                        frame,
+                        materialCharacteristics
+                ));
+            }
         }
 
 

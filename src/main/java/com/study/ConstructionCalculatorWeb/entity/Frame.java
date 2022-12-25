@@ -2,6 +2,7 @@ package com.study.ConstructionCalculatorWeb.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.List;

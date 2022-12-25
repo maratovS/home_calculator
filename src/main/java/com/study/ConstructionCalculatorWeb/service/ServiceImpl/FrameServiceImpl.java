@@ -260,7 +260,7 @@ public class FrameServiceImpl implements FrameService {
 
         // ПЕРЕКРЫТИЯ
 
-        if (frame.getOverlapThickness() != null) {
+        if (frame.getOverlapThickness() != 0.0) {
             int amountOfRacksBase = (int) Math.round(frame.getBaseArea() / 0.7);
             materialCharacteristics =
                     materialCharacteristicsRepository.findByWidthAndThicknessAndLength(width, frame.getOverlapThickness(), 6.0);
@@ -350,7 +350,11 @@ public class FrameServiceImpl implements FrameService {
 
 
         results = resultsRepository.saveAll(results);
-        calculation.setResults(results);
+        List<Results> resultsBefore = calculation.getResults();
+        if (resultsBefore == null || resultsBefore.isEmpty())
+            resultsBefore = new ArrayList<>();
+        resultsBefore.addAll(results);
+        calculation.setResults(resultsBefore);
         calculationRepository.save(calculation);
         return results;
     }

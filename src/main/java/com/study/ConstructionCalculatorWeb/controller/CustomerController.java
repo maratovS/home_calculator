@@ -70,7 +70,7 @@ public class CustomerController {
     }
 
     @PatchMapping("/updateCalculation")
-    Calculation updateCalculation(Calculation calculation){
+    Calculation updateCalculation(@RequestBody Calculation calculation){
         return frameService.updateCalculation(calculation);
     }
 }

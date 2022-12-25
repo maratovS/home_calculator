@@ -97,14 +97,21 @@ public class FrameServiceImpl implements FrameService {
     @Override
     public List<Results> updateFrame(Frame frame, UUID calculationNumber) {
         Calculation calculation = this.getCalculation(calculationNumber);
+        Frame finalFrame = frame;
         List<Results> resultsToReplace = calculation
                 .getResults()
                 .stream()
                 .filter(s ->
                         Objects.equals(
-                                s.getFrame().getId(), frame.getId()
+                                s.getFrame().getId(), finalFrame.getId()
                         )).toList();
         resultsRepository.deleteAll(resultsToReplace);
+        frame.setId(null);
+        frame.getApertures().forEach(aperturesInFrames -> {
+            aperturesInFrames.setId(new aperturesInFramesKey(null, null));
+            aperturesInFrames.getAperture().setId(null);
+        });
+        frame = this.addFrame(frame);
         return this.doBusiness(calculation, frame);
     }
 
@@ -352,5 +359,10 @@ public class FrameServiceImpl implements FrameService {
             throw new RuntimeException("Calculation not found");
 
         calculationRepository.delete(calculation);
+    }
+
+    @Override
+    public List<Status> getStatuses() {
+        return statusRepository.findAll();
     }
 }

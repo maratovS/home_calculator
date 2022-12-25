@@ -1,10 +1,7 @@
 package com.study.ConstructionCalculatorWeb.controller;
 
 
-import com.study.ConstructionCalculatorWeb.entity.Calculation;
-import com.study.ConstructionCalculatorWeb.entity.Frame;
-import com.study.ConstructionCalculatorWeb.entity.Material;
-import com.study.ConstructionCalculatorWeb.entity.Results;
+import com.study.ConstructionCalculatorWeb.entity.*;
 import com.study.ConstructionCalculatorWeb.service.FrameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,5 +62,15 @@ public class CustomerController {
     @PatchMapping("/updateFrame")
     List<Results> updateFrame(@RequestBody Frame frame, @RequestParam UUID calculationNumber){
         return frameService.updateFrame(frame, calculationNumber);
+    }
+
+    @GetMapping("/statuses")
+    List<Status> getStatuses(){
+        return frameService.getStatuses();
+    }
+
+    @PatchMapping("/updateCalculation")
+    Calculation updateCalculation(Calculation calculation){
+        return frameService.updateCalculation(calculation);
     }
 }

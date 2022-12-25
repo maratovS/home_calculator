@@ -365,4 +365,9 @@ public class FrameServiceImpl implements FrameService {
     public List<Status> getStatuses() {
         return statusRepository.findAll();
     }
+
+    @Override
+    public Calculation updateCalculation(Calculation calculation) {
+        return calculationRepository.save(calculation);
+    }
 }
